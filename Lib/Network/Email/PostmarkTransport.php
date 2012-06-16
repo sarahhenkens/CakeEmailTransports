@@ -18,6 +18,13 @@ App::uses('HttpSocket', 'Network/Http');
 class PostmarkTransport extends AbstractTransport {
 
 /**
+ * Socket
+ *
+ * @var HttpSocket
+ */
+	protected $_socket;
+
+/**
  * CakeEmail
  *
  * @var CakeEmail
@@ -176,6 +183,8 @@ class PostmarkTransport extends AbstractTransport {
  * @throws CakeException
  */
 	protected function _postmarkSend() {
+		$this->_generateSocket();
+
 		$protocol = $this->_config['secure'] ? 'https' : 'http';
 		$uri = $protocol . '://' . $this->_apiUri;
 
@@ -189,12 +198,11 @@ class PostmarkTransport extends AbstractTransport {
 			)
 		);
 
-		$socket = new HttpSocket();
-		$return = $socket->post($uri, json_encode($this->_data), $request);
+		$return = $this->_socket->post($uri, json_encode($this->_data), $request);
 
 		$response = json_decode($return);
 
-		if ($socket->response->code != '200') {
+		if ($this->_socket->response->code != '200') {
 			throw new CakeException($response->Message);
 		}
 
@@ -203,5 +211,14 @@ class PostmarkTransport extends AbstractTransport {
 			'message' => $this->_data,
 			'response' => $response
 		);
+	}
+
+/**
+ * Helper method to generate socket
+ *
+ * @return void
+ */
+	protected function _generateSocket() {
+		$this->_socket = new HttpSocket();
 	}
 }
