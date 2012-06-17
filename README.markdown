@@ -1,6 +1,7 @@
 # A Collection of CakeEmail transport classes #
 ## Currently supported services ##
  * Postmark (http://postmarkapp.com)
+ * Amazon SES
 
 ## Postmark ##
 
@@ -11,6 +12,7 @@ Add the following configuration in your Config/email.php file:
 ```php
 <?php
   public $postmark = array(
+    'transport' => 'CakeEmailTransports.Postmark',
     'secure' => false, //Set to true to use https
     'apiKey' => '__your_api_key__', //Your postmark API key
     'debug' => false //Set to true to test your configuration without sending the email
@@ -23,12 +25,11 @@ The following example shows you how to send an email with the postmark transport
 
 ```php
 <?php
-$email = new CakeEmail();
+$email = new CakeEmail('postmark');
 
-$email->transport('CakeEmailTransports.Postmark')->config('postmark')
-  ->to('receiver@example.com')
-  ->from('sender@example.com')
-  ->subject('Hello World');
+$email->to('receiver@example.com');
+$email->from('sender@example.com')
+$email->subject('Hello World');
 
 $email->send('This is an example email');
 ```
@@ -36,6 +37,39 @@ You can also set the postmark tag property on an email by email basis:
 ```php
 <?php
 $email->addHeaders(array('X-Tag' => 'my-tag'));
+```
+
+## Amazon SES ##
+
+### Requirements ###
+
+ * Amazon Web Services SDK (http://pear.amazonwebservices.com/)
+
+### Configuration ###
+
+Add the following configuration in your Config/email.php file:
+
+```php
+<?php
+  public $amazon = array(
+    'transport' => 'CakeEmailTransports.Amazon',
+    'key' => '__your_amazon_access_key',
+    'secret' => '__your_amazon_secret_access_key',
+  );
+```
+### Usage ###
+
+The following example shows you how to send an email with the postmark transport:
+
+```php
+<?php
+$email = new CakeEmail('amazon');
+
+$email->to('receiver@example.com');
+$email->from('sender@example.com')
+$email->subject('Hello World');
+
+$email->send('This is an example email');
 ```
 
 # License #
