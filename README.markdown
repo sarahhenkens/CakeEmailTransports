@@ -1,7 +1,8 @@
 # A Collection of CakeEmail transport classes #
 ## Currently supported services ##
  * Postmark (http://postmarkapp.com)
- * Amazon SES
+ * Amazon SES (http://aws.amazon.com/ses/)
+ * PostageApp (http://postageapp.com)
 
 ## Postmark ##
 
@@ -71,6 +72,37 @@ $email->subject('Hello World');
 
 $email->send('This is an example email');
 ```
+
+## PostageApp ##
+
+### Configuration ###
+
+Add the following configuration in your Config/email.php file:
+
+```php
+<?php
+  public $postageapp = array(
+    'transport' => 'CakeEmailTransports.Postageapp',
+    'apiKey' => '__your_api_key__', //Your PostageApp API key
+  );
+```
+### Usage ###
+
+The following example shows you how to send an email with the postmark transport:
+
+```php
+<?php
+$email = new CakeEmail('postageapp');
+
+$email->to('receiver@example.com');
+$email->from('sender@example.com')
+$email->subject('Hello World');
+
+$email->send('This is an example email');
+```
+
+### Limitations ###
+ * BCC, CC and Sender headers are not supported by PostageApp
 
 # License #
 Copyright © 2012 Jelle Henkens
