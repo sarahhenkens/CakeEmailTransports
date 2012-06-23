@@ -60,7 +60,8 @@ class PostmarkTransport extends AbstractTransport {
 		$default = array(
 			'apiKey' => false,
 			'secure' => false,
-			'tag' => false
+			'tag' => false,
+			'debug' => false
 		);
 
 		$this->_config = $config + $default;
@@ -105,9 +106,14 @@ class PostmarkTransport extends AbstractTransport {
 			$this->_data['ReplyTo'] = $headers['Reply-To'];
 		}
 
+		$tag = false;
 		if (isset($headers['X-Tag'])) {
-			$this->_data['Tag'] = $headers['X-Tag'];
+			$tag = $headers['X-Tag'];
 		} elseif (isset($this->_config['tag'])) {
+			$tag = $this->_config['tag'];
+		}
+
+		if ($tag !== false) {
 			$this->_data['Tag'] = $this->_config['tag'];
 		}
 
