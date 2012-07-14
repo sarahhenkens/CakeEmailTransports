@@ -40,6 +40,23 @@ You can also set the postmark tag property on an email by email basis:
 $email->addHeaders(array('X-Tag' => 'my-tag'));
 ```
 
+### Debugging ###
+
+By setting the debug configuration option to true, emails will never be sent out. It will use the debug api key from postmark.
+This can be used to debug your code and see if any errors happen.
+
+By setting the debug configuration option to an email address, all emails will be sent to that address no mather what you type into the
+to, cc and bcc options.
+
+```php
+<?php
+  public $postmark = array(
+    'transport' => 'CakeEmailTransports.Postmark',
+    'apiKey' => '__your_api_key__',
+    'debug' => 'example@example.com'
+  );
+```
+
 ## Amazon SES ##
 
 ### Requirements ###
