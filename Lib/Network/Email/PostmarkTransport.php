@@ -93,7 +93,7 @@ class PostmarkTransport extends AbstractTransport {
 	protected function _prepareData() {
 		$this->_data = array();
 
-		$headers = $this->_cakeEmail->getHeaders(array('from', 'sender', 'replyTo', 'returnPath', 'to', 'cc', 'subject'));
+		$headers = $this->_cakeEmail->getHeaders(array('from', 'sender', 'replyTo', 'returnPath', 'to', 'cc', 'bcc', 'subject'));
 
 		$map = array('From', 'To', 'Cc', 'Bcc', 'Subject');
 		foreach ($map as $header) {
@@ -194,7 +194,17 @@ class PostmarkTransport extends AbstractTransport {
 		$protocol = $this->_config['secure'] ? 'https' : 'http';
 		$uri = $protocol . '://' . $this->_apiUri;
 
-		$apiKey = $this->_config['debug'] ? 'POSTMARK_API_TEST' : $this->_config['apiKey'];
+		$apiKey = $this->_config['debug'] === true ? 'POSTMARK_API_TEST' : $this->_config['apiKey'];
+
+		if (is_string($this->_config['debug'])) {
+			$this->_data['To'] = $this->_config['debug'];
+			if (isset($this->_data['Cc'])) {
+				unset($this->_data['Cc']);
+			}
+			if (isset($this->_data['Bcc'])) {
+				unset($this->_data['Bcc']);
+			}
+		}
 
 		$request = array(
 			'header' => array(
